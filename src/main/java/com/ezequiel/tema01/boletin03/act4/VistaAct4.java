@@ -1,8 +1,10 @@
-package com.ezequiel.tema01.boletin03.act3;
+package com.ezequiel.tema01.boletin03.act4;
 
-import com.ezequielmenor.tema01.act4.GestorPedidos;
-import com.ezequielmenor.tema01.act4.Item;
-import com.ezequielmenor.tema01.act4.Pedidos;
+import com.ezequiel.tema01.boletin03.act4.GestorPedidos;
+import com.ezequiel.tema01.boletin03.act4.Item;
+import com.ezequiel.tema01.boletin03.act4.Pedidos;
+
+
 
 import java.io.InputStream;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.ezequiel.tema01.boletin02.act4;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

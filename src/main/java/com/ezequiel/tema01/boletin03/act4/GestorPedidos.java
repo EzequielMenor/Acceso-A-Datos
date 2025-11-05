@@ -1,6 +1,6 @@
 package com.ezequiel.tema01.boletin03.act4;
 
-import com.ezequielmenor.tema01.act2.Empleado2;
+import com.ezequiel.tema01.boletin03.act2.Empleado;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
