@@ -67,6 +67,7 @@ public class CiclistaDAOImpl implements CiclistaDAO{
     }
 
 
+    //Ejercicio 4
     @Override
     public double getVelocidadMedia(int id_ciclista){
         double velocidadKmH = 0.0;
