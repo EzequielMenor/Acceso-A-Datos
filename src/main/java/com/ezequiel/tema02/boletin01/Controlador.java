@@ -30,13 +30,20 @@ public class Controlador {
 
 
     public void listarEquipos(){
+
         try {
             List<Equipo> equipos = equipoDAO.findAll();
+            TextTable t = new TextTable("ID", "Nombre", "País");
 
-            System.out.println("--- Equipos Registrados ---");
             for (Equipo equipo : equipos) {
-                System.out.println("ID: " + equipo.getId_equipo() + " | Nombre: " + equipo.getNombre() + " | País: " + equipo.getPais());
+                t.addRow(
+                        String.valueOf(equipo.getId_equipo()),
+                        equipo.getNombre(),
+                        equipo.getPais()
+                );
             }
+            System.out.println(t.toString());
+
         } catch (DataAccessException e){
             System.err.println(e.getMessage());
         }
