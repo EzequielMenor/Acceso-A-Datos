@@ -1,16 +1,11 @@
 package com.ezequiel.tema02.boletin01;
 
-import com.ezequiel.tema02.boletin01.act1.Equipo;
-import com.ezequiel.tema02.boletin01.act1.EquipoDAO;
-import com.ezequiel.tema02.boletin01.act1.EquipoDAOImpl;
-
-import java.util.List;
 import java.util.Scanner;
 
 public class Vista {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        ConexionBD Controller = new ConexionBD();
+        Controlador controlador = new Controlador();
 
         System.out.println("--- MENU SQL ---");
         System.out.println("1. Listar equipos");
@@ -20,16 +15,16 @@ public class Vista {
 
         switch (opcion){
             case 1:
-                Controller.listarEquipos();
+                controlador.listarEquipos();
                 break;
             case 2:
-                Controller.listarEquipos();
+                controlador.listarEquipos();
                 System.out.print("Elige el ID un equipo para ver sus ciclistas(0 muestra todos los ciclistas): ");
                 int idEquipo = sc.nextInt();
                 if (idEquipo != 0){
-                    Controller.ciclistasPorEquipo(idEquipo);
+                    controlador.ciclistasPorEquipo(idEquipo);
                 } else {
-                    Controller.listarCiclistas();
+                    controlador.listarCiclistas();
                 }
                 break;
             default:

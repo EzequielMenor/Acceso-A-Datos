@@ -7,10 +7,9 @@ import com.ezequiel.tema02.boletin01.act2.Ciclista;
 import com.ezequiel.tema02.boletin01.act2.CiclistaDAO;
 import com.ezequiel.tema02.boletin01.act2.CiclistaDAOImpl;
 
-import java.sql.Connection;
 import java.util.List;
 
-public class ConexionBD {
+public class Controlador {
     private static final DB.Driver DB_DRIVER = DB.Driver.POSTGRESQL; // mysql
     private static final String DB_HOST = "localhost";
     private static final int DB_PORT = 5432; // 3306 para mysql
@@ -22,7 +21,7 @@ public class ConexionBD {
     private final EquipoDAO equipoDAO;
     private final CiclistaDAO ciclistaDAO;
 
-    public ConexionBD(){
+    public Controlador(){
         this.db = new DB(DB_DRIVER, DB_HOST, DB_PORT, DB_NAME, DB_USERNAME,DB_PASSWORD);
         this.equipoDAO = new EquipoDAOImpl(db);
         this.ciclistaDAO = new CiclistaDAOImpl(db);
