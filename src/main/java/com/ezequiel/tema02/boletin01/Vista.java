@@ -8,12 +8,11 @@ public class Vista {
         Controlador controlador = new Controlador();
         int opcion;
         do {
-
-
             System.out.println("--- MENU SQL ---");
             System.out.println("1. Listar equipos");
             System.out.println("2. Listar ciclistas");
             System.out.println("3. Listar etapas");
+            System.out.println("4. Velocidad media de un ciclista");
             System.out.println("0. Salir");
             System.out.print("Opción: ");
             opcion = sc.nextInt();
@@ -42,6 +41,18 @@ public class Vista {
                 case 3:
                     System.out.println("--- Etapas Regitradas ---");
                     controlador.listarEtapas();
+                    break;
+
+                case 4:
+                    System.out.println("--- Listado equipos ---");
+                    controlador.listarEquipos();
+                    System.out.print("Elige el id del equipo al que pertenece el ciclista: ");
+                    int idEquipoCiclista = sc.nextInt();
+                    System.out.println("Listado ciclistas");
+                    controlador.ciclistasPorEquipo(idEquipoCiclista);
+                    System.out.print("Elige el id del ciclista: ");
+                    int idCiclista = sc.nextInt();
+                    controlador.mostrarVelocidadMedia(idCiclista);
                     break;
                 default:
                     System.out.println("Opción no válida");

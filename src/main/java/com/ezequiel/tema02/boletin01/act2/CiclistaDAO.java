@@ -5,4 +5,5 @@ import java.util.List;
 public interface CiclistaDAO {
     List<Ciclista> findByIdEquipo(int id_equipo);
     List<Ciclista> findAll();
+    double getVelocidadMedia(int id_ciclista);
 }

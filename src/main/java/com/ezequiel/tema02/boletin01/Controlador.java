@@ -26,6 +26,7 @@ public class Controlador {
     private final CiclistaDAO ciclistaDAO;
     private final EtapaDAO etapaDAO;
 
+
     public Controlador(){
         this.db = new DB(DB_DRIVER, DB_HOST, DB_PORT, DB_NAME, DB_USERNAME,DB_PASSWORD);
         this.equipoDAO = new EquipoDAOImpl(db);
@@ -120,6 +121,21 @@ public class Controlador {
                         String.valueOf(resumenEtapa.getKmTotales())
                 );
             }
+            System.out.println(t.toString());
+        }catch (DataAccessException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void mostrarVelocidadMedia(int idCiclista){
+        try {
+            double velocidad = ciclistaDAO.getVelocidadMedia(idCiclista);
+            TextTable t = new TextTable("ID Ciclista", "Velocidad Media");
+            String velocidadFormateada = String.format("%.2f km/h", velocidad);
+            t.addRow(
+                    String.valueOf(idCiclista),
+                    velocidadFormateada
+            );
             System.out.println(t.toString());
         }catch (DataAccessException e){
             System.err.println(e.getMessage());
