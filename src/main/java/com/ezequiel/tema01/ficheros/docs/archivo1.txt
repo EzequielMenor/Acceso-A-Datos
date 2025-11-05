@@ -1,0 +1,3 @@
+Contenido de archivo1.txt
+Hola 
+

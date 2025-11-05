@@ -1,0 +1,4 @@
+Contenido de archivo1.txt
+Hola 
+
+Contenido de archivo2.txt
