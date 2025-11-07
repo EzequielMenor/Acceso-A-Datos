@@ -10,7 +10,9 @@ import com.ezequiel.tema02.boletin01.act3.Etapa;
 import com.ezequiel.tema02.boletin01.act3.EtapaDAO;
 import com.ezequiel.tema02.boletin01.act3.EtapaDAOImpl;
 import com.ezequiel.tema02.boletin01.act3.ResumenEtapa;
+import com.ezequiel.tema02.boletin01.act5.ClasifEtapa;
 
+import java.time.Duration;
 import java.util.List;
 
 public class Controlador {
@@ -111,6 +113,10 @@ public class Controlador {
         }catch (DataAccessException e){
             System.err.println(e.getMessage());
         }
+
+    }
+
+    public void listarEtapasResuimdas(){
         try {
             List<ResumenEtapa> etapasResumidas = etapaDAO.getResumenPorTipo();
             TextTable t = new TextTable("Tipo", "Cantidad", "KM Totales");
@@ -140,5 +146,34 @@ public class Controlador {
         }catch (DataAccessException e){
             System.err.println(e.getMessage());
         }
+    }
+
+    public void mostrarClasificacionEtapa(int idEtapa){
+        try{
+            List<ClasifEtapa> clasifEtapas = etapaDAO.getClasifEtapa(idEtapa);
+            TextTable t = new TextTable("Posicion", "Nombre Ciclista", "Nombre Equipo", "Tiempo");
+            for (ClasifEtapa clasifEtapa : clasifEtapas){
+                t.addRow(
+                        String.valueOf(clasifEtapa.getPosicion()),
+                        clasifEtapa.getNombreCiclista(),
+                        clasifEtapa.getNombreEquipo(),
+                        formatDuration(clasifEtapa.getTiempo())
+                );
+            }
+            System.out.println(t.toString());
+            System.out.println("DEBUG: Se ha llamado a listarEtapas (el simple)");
+        }catch (DataAccessException e){
+            System.err.println(e.getMessage());
+        }
+
+    }
+    private String formatDuration(Duration duration) {
+        long segundosTotales = duration.getSeconds();
+        long horas = segundosTotales / 3600;
+        long minutos = (segundosTotales % 3600) / 60;
+        long segundos = segundosTotales % 60;
+
+        // Formato %02d (dos dígitos, con cero delante si es necesario)
+        return String.format("%02d:%02d:%02d", horas, minutos, segundos);
     }
 }

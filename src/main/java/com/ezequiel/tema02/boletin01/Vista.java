@@ -13,6 +13,7 @@ public class Vista {
             System.out.println("2. Listar ciclistas");
             System.out.println("3. Listar etapas");
             System.out.println("4. Velocidad media de un ciclista");
+            System.out.println("5. Clasificación etapa");
             System.out.println("0. Salir");
             System.out.print("Opción: ");
             opcion = sc.nextInt();
@@ -41,6 +42,7 @@ public class Vista {
                 case 3:
                     System.out.println("--- Etapas Regitradas ---");
                     controlador.listarEtapas();
+                    controlador.listarEtapasResuimdas();
                     break;
 
                 case 4:
@@ -53,6 +55,15 @@ public class Vista {
                     System.out.print("Elige el id del ciclista: ");
                     int idCiclista = sc.nextInt();
                     controlador.mostrarVelocidadMedia(idCiclista);
+                    break;
+
+                case 5:
+                    System.out.println("--- Listado Etapas ---");
+                    controlador.listarEtapas();
+                    System.out.print("Elige el ID de una etapa: ");
+                    int id_etapa = sc.nextInt();
+                    System.out.println("--- Clasificación etapa " + id_etapa + " ---");
+                    controlador.mostrarClasificacionEtapa(id_etapa);
                     break;
                 default:
                     System.out.println("Opción no válida");

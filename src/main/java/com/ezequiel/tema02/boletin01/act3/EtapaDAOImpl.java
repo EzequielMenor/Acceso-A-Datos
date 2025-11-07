@@ -3,12 +3,14 @@ package com.ezequiel.tema02.boletin01.act3;
 import com.ezequiel.tema02.boletin01.DB;
 import com.ezequiel.tema02.boletin01.DataAccessException;
 import com.ezequiel.tema02.boletin01.TextTable;
+import com.ezequiel.tema02.boletin01.act5.ClasifEtapa;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,4 +67,32 @@ public class EtapaDAOImpl implements EtapaDAO{
         }
         return etapas;
     }
+
+
+    @Override
+    public List<ClasifEtapa> getClasifEtapa(int idEtapa){
+        String sql = "SELECT r.posicion, c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, EXTRACT(EPOCH FROM r.tiempo) AS tiempo_en_segundos FROM resultados_etapa r JOIN ciclistas c ON r.id_ciclista = c.id_ciclista JOIN equipos eq ON c.id_equipo = eq.id_equipo WHERE r.id_etapa = ? AND r.estado = 'FINALIZADO' ORDER BY r.posicion;";
+        List<ClasifEtapa> clasifEtapas = new ArrayList<>();
+        try(Connection conn = db.getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);) {
+                st.setInt(1, idEtapa);
+                try(ResultSet rs = st.executeQuery()){
+                    while (rs.next()){
+                        long segundos = rs.getLong("tiempo_en_segundos");
+                        Duration duration = Duration.ofSeconds(segundos);
+                        clasifEtapas.add(new ClasifEtapa(
+                                rs.getInt("posicion"),
+                                rs.getString("nombre_ciclista"),
+                                rs.getString("nombre_equipo"),
+                                duration
+                        ));
+                    }
+                }
+        }catch (SQLException e){
+            throw new DataAccessException("Error al obtener clasificación de etapa", e);
+        }
+        return clasifEtapas;
+    }
+
+
 }
