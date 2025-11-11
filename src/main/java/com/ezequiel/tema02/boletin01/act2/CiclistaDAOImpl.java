@@ -2,6 +2,8 @@ package com.ezequiel.tema02.boletin01.act2;
 
 import com.ezequiel.tema02.boletin01.DB;
 import com.ezequiel.tema02.boletin01.DataAccessException;
+import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
+import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,24 +13,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CiclistaDAOImpl implements CiclistaDAO{
+public class CiclistaDAOImpl implements CiclistaDAO {
     private final DB db;
 
-    public CiclistaDAOImpl(DB db){
+    public CiclistaDAOImpl(DB db) {
         this.db = db;
     }
 
     @Override
-    public List<Ciclista> findByIdEquipo(int id_equipo){
+    public List<Ciclista> findByIdEquipo(int id_equipo) {
         String sql = "SELECT id_ciclista, id_equipo, nombre, pais, fecha_nac FROM ciclistas WHERE id_equipo = ? ORDER BY nombre;";
         List<Ciclista> ciclistas = new ArrayList<>();
-        try(Connection conn = db.getConnection();
-            PreparedStatement statement = conn.prepareStatement(sql)){
+        try (Connection conn = db.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, id_equipo);
-            try(ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
                     LocalDate fecha = resultSet.getDate("fecha_nac").toLocalDate();
-                     ciclistas.add(new Ciclista(
+                    ciclistas.add(new Ciclista(
                             resultSet.getInt("id_ciclista"),
                             resultSet.getInt("id_equipo"),
                             resultSet.getString("nombre"),
@@ -37,7 +39,7 @@ public class CiclistaDAOImpl implements CiclistaDAO{
                     ));
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DataAccessException("Error al buscar ciclista en equipo " + id_equipo, e);
         }
         return ciclistas;
@@ -69,17 +71,17 @@ public class CiclistaDAOImpl implements CiclistaDAO{
 
     //Ejercicio 4
     @Override
-    public double getVelocidadMedia(int id_ciclista){
+    public double getVelocidadMedia(int id_ciclista) {
         double velocidadKmH = 0.0;
         String sql = "SELECT SUM(e.distancia_km) AS total_km, SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos " +
                 "FROM resultados_etapa r " +
                 "JOIN etapas e ON r.id_etapa = e.id_etapa " +
                 "WHERE r.id_ciclista = ? AND r.estado = 'FINALIZADO'";
         try (Connection conn = db.getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql);){
+             PreparedStatement statement = conn.prepareStatement(sql);) {
             statement.setInt(1, id_ciclista);
-            try (ResultSet resultSet = statement.executeQuery()){
-                if (resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     double totalKM = resultSet.getDouble("total_km");
                     double totalSegundos = resultSet.getDouble("total_segundos");
                     if (totalSegundos == 0) return 0.0;
@@ -87,9 +89,64 @@ public class CiclistaDAOImpl implements CiclistaDAO{
                 }
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DataAccessException("Error al conseguir la velocidad media del ciclista " + id_ciclista, e);
         }
         return velocidadKmH;
+    }
+
+
+    //Ejercicio 6
+    @Override
+    public List<ClasificacionMontana> getClasificacionMontana() {
+        List<ClasificacionMontana> clasificacionMontanas = new ArrayList<>();
+        String sql = "SELECT c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, SUM(r.puntos) AS total_puntos FROM resultados_puerto r JOIN ciclistas c ON r.id_ciclista = c.id_ciclista JOIN equipos eq ON c.id_equipo = eq.id_equipo GROUP BY c.id_ciclista, eq.nombre ORDER BY total_puntos DESC;";
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                clasificacionMontanas.add(new ClasificacionMontana(
+                        resultSet.getString("nombre_ciclista"),
+                        resultSet.getString("nombre_equipo"),
+                        resultSet.getLong("total_puntos")
+                ));
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("Error al obtener clasificación de montaña", e);
+        }
+        return clasificacionMontanas;
+    }
+
+    //Ejercicio 7
+    @Override
+    public List<ClasificacionRegularidad> getClasifRegularidad(){
+        List<ClasificacionRegularidad> clasificacionRegularidad = new ArrayList<>();
+        String sql = "WITH puntos_combinados AS (" +
+                "    SELECT id_ciclista, puntos FROM resultados_sprint" +
+                "    UNION ALL" +
+                "    SELECT id_ciclista, puntos FROM puntos_meta" +
+                ") " +
+                "SELECT c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, SUM(p.puntos) AS total_puntos " +
+                "FROM puntos_combinados p " +
+                "JOIN ciclistas c ON p.id_ciclista = c.id_ciclista " +
+                "JOIN equipos eq ON c.id_equipo = eq.id_equipo " +
+                "GROUP BY c.id_ciclista, eq.nombre " +
+                "ORDER BY total_puntos DESC;";
+
+        try (Connection conn = db.getConnection();
+        PreparedStatement statement = conn.prepareStatement(sql);
+        ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                clasificacionRegularidad.add(new ClasificacionRegularidad(
+                        resultSet.getString("nombre_ciclista"),
+                        resultSet.getString("nombre_equipo"),
+                        resultSet.getLong("total_puntos")
+                ));
+            }
+        }catch (SQLException e){
+            throw new DataAccessException("Error al obtener clasificación de regularidad", e);
+        }
+        return clasificacionRegularidad;
     }
 }

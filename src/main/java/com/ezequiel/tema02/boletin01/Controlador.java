@@ -11,7 +11,10 @@ import com.ezequiel.tema02.boletin01.act3.EtapaDAO;
 import com.ezequiel.tema02.boletin01.act3.EtapaDAOImpl;
 import com.ezequiel.tema02.boletin01.act3.ResumenEtapa;
 import com.ezequiel.tema02.boletin01.act5.ClasifEtapa;
+import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
+import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
 
+import javax.xml.crypto.Data;
 import java.time.Duration;
 import java.util.List;
 
@@ -161,7 +164,6 @@ public class Controlador {
                 );
             }
             System.out.println(t.toString());
-            System.out.println("DEBUG: Se ha llamado a listarEtapas (el simple)");
         }catch (DataAccessException e){
             System.err.println(e.getMessage());
         }
@@ -176,4 +178,43 @@ public class Controlador {
         // Formato %02d (dos dígitos, con cero delante si es necesario)
         return String.format("%02d:%02d:%02d", horas, minutos, segundos);
     }
+
+    public void mostrarClasifMontanas() {
+        try {
+            List<ClasificacionMontana> clasificacionMontanas = ciclistaDAO.getClasificacionMontana();
+            TextTable t = new TextTable("Pos", "Ciclista", "Equipo", "Puntos");
+            int pos = 1;
+            for (ClasificacionMontana clasificacionMontana : clasificacionMontanas) {
+                t.addRow(
+                        String.valueOf(pos++),
+                        clasificacionMontana.getNombreCiclista(),
+                        clasificacionMontana.getNombreEquipo(),
+                        String.valueOf(clasificacionMontana.getTotalPuntos())
+                );
+            }
+            System.out.println(t.toString());
+        } catch (DataAccessException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void mostrarClasifRegularidad() {
+        try {
+            List<ClasificacionRegularidad> clasificacionRegularidads = ciclistaDAO.getClasifRegularidad();
+            TextTable t = new TextTable("Pos", "Ciclista", "Equipo", "Puntos");
+            int pos = 1;
+            for (ClasificacionRegularidad clasificacionRegularidad : clasificacionRegularidads) {
+                t.addRow(
+                        String.valueOf(pos++),
+                        clasificacionRegularidad.getNombreCiclista(),
+                        clasificacionRegularidad.getNombreEquipo(),
+                        String.valueOf(clasificacionRegularidad.getTotalPuntos())
+                );
+            }
+            System.out.println(t.toString());
+        }catch (DataAccessException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
 }
