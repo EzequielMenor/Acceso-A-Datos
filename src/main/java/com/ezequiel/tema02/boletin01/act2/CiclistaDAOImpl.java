@@ -75,10 +75,17 @@ public class CiclistaDAOImpl implements CiclistaDAO {
     @Override
     public double getVelocidadMedia(int id_ciclista) {
         double velocidadKmH = 0.0;
-        String sql = "SELECT SUM(e.distancia_km) AS total_km, SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos " +
-                "FROM resultados_etapa r " +
-                "JOIN etapas e ON r.id_etapa = e.id_etapa " +
-                "WHERE r.id_ciclista = ? AND r.estado = 'FINALIZADO'";
+        String sql = """
+            SELECT
+                SUM(e.distancia_km) AS total_km,
+                SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos
+            FROM
+                resultados_etapa r
+            JOIN
+                etapas e ON r.id_etapa = e.id_etapa
+            WHERE
+                r.id_ciclista = ? AND r.estado = 'FINALIZADO'
+            """;
         try (Connection conn = db.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql);) {
             statement.setInt(1, id_ciclista);
@@ -102,7 +109,22 @@ public class CiclistaDAOImpl implements CiclistaDAO {
     @Override
     public List<ClasificacionMontana> getClasificacionMontana() {
         List<ClasificacionMontana> clasificacionMontanas = new ArrayList<>();
-        String sql = "SELECT c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, SUM(r.puntos) AS total_puntos FROM resultados_puerto r JOIN ciclistas c ON r.id_ciclista = c.id_ciclista JOIN equipos eq ON c.id_equipo = eq.id_equipo GROUP BY c.id_ciclista, eq.nombre ORDER BY total_puntos DESC;";
+        String sql = """
+            SELECT
+                c.nombre AS nombre_ciclista,
+                eq.nombre AS nombre_equipo,
+                SUM(r.puntos) AS total_puntos
+            FROM
+                resultados_puerto r
+            JOIN
+                ciclistas c ON r.id_ciclista = c.id_ciclista
+            JOIN
+                equipos eq ON c.id_equipo = eq.id_equipo
+            GROUP BY
+                c.id_ciclista, c.nombre, eq.nombre
+            ORDER BY
+                total_puntos DESC;
+            """;
 
         try (Connection conn = db.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql);
