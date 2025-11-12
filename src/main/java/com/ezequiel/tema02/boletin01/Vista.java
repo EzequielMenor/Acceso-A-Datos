@@ -92,5 +92,6 @@ public class Vista {
             }
         } while (opcion != 0);
 
+        sc.close();
     }
 }
