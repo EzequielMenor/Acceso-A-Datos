@@ -42,38 +42,41 @@ public class EquipoDAOImpl implements EquipoDAO {
     //Ejercicio 9
     @Override
     public List<ClasifEquipo> getClasifEquipo() {
-        String sql = "WITH ranked_times AS (" +
-                "    SELECT " +
-                "        c.id_equipo," +
-                "        r.tiempo," +
-                "        ROW_NUMBER() OVER(PARTITION BY r.id_etapa, c.id_equipo ORDER BY r.tiempo ASC) as ranking_tiempo" +
-                "    FROM " +
-                "        resultados_etapa r" +
-                "    JOIN " +
-                "        ciclistas c ON r.id_ciclista = c.id_ciclista" +
-                "    WHERE " +
-                "        r.estado = 'FINALIZADO' AND r.tiempo IS NOT NULL" +
-                "), " +
-                "top_3_times AS (" +
-                "    SELECT " +
-                "        id_equipo," +
-                "        tiempo" +
-                "    FROM " +
-                "        ranked_times" +
-                "    WHERE " +
-                "        ranking_tiempo <= 3" +
-                ") " +
-                "SELECT " +
-                "    eq.nombre AS nombre_equipo," +
-                "    SUM(EXTRACT(EPOCH FROM t.tiempo)) AS total_segundos " +
-                "FROM " +
-                "    top_3_times t" +
-                " JOIN " +
-                "    equipos eq ON t.id_equipo = eq.id_equipo " +
-                "GROUP BY " +
-                "    eq.id_equipo, eq.nombre " +
-                "ORDER BY " +
-                "    total_segundos ASC;";
+        String sql = """
+            WITH ranked_times AS (
+                SELECT
+                    c.id_equipo,
+                    r.tiempo,
+                    ROW_NUMBER() OVER(PARTITION BY r.id_etapa, c.id_equipo ORDER BY r.tiempo ASC) as ranking_tiempo
+                FROM
+                    resultados_etapa r
+                JOIN
+                    ciclistas c ON r.id_ciclista = c.id_ciclista
+                WHERE
+                    r.estado = 'FINALIZADO' AND r.tiempo IS NOT NULL
+            ),
+            top_3_times AS (
+                SELECT
+                    id_equipo,
+                    tiempo
+                FROM
+                    ranked_times
+                WHERE
+                    ranking_tiempo <= 3
+            )
+            SELECT
+                eq.nombre AS nombre_equipo,
+                SUM(EXTRACT(EPOCH FROM t.tiempo)) AS total_segundos
+            FROM
+                top_3_times t
+             JOIN
+                equipos eq ON t.id_equipo = eq.id_equipo
+            GROUP BY
+                eq.id_equipo, eq.nombre
+            ORDER BY
+                total_segundos ASC;
+            """;
+
         List<ClasifEquipo> clasifEquipos = new ArrayList<>();
         try (Connection conn = db.getConnection();
              PreparedStatement st = conn.prepareStatement(sql);

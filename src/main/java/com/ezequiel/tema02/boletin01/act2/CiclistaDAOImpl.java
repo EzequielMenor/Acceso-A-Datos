@@ -124,17 +124,27 @@ public class CiclistaDAOImpl implements CiclistaDAO {
     @Override
     public List<ClasificacionRegularidad> getClasifRegularidad(){
         List<ClasificacionRegularidad> clasificacionRegularidad = new ArrayList<>();
-        String sql = "WITH puntos_combinados AS (" +
-                "    SELECT id_ciclista, puntos FROM resultados_sprint" +
-                "    UNION ALL" +
-                "    SELECT id_ciclista, puntos FROM puntos_meta" +
-                ") " +
-                "SELECT c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, SUM(p.puntos) AS total_puntos " +
-                "FROM puntos_combinados p " +
-                "JOIN ciclistas c ON p.id_ciclista = c.id_ciclista " +
-                "JOIN equipos eq ON c.id_equipo = eq.id_equipo " +
-                "GROUP BY c.id_ciclista, eq.nombre " +
-                "ORDER BY total_puntos DESC;";
+        String sql = """
+            WITH puntos_combinados AS (
+                SELECT id_ciclista, puntos FROM resultados_sprint
+                UNION ALL
+                SELECT id_ciclista, puntos FROM puntos_meta
+            )
+            SELECT
+                c.nombre AS nombre_ciclista,
+                eq.nombre AS nombre_equipo,
+                SUM(p.puntos) AS total_puntos
+            FROM
+                puntos_combinados p
+            JOIN
+                ciclistas c ON p.id_ciclista = c.id_ciclista
+            JOIN
+                equipos eq ON c.id_equipo = eq.id_equipo
+            GROUP BY
+                c.id_ciclista, c.nombre, eq.nombre
+            ORDER BY
+                total_puntos DESC;
+            """;
 
         try (Connection conn = db.getConnection();
         PreparedStatement statement = conn.prepareStatement(sql);
@@ -156,22 +166,23 @@ public class CiclistaDAOImpl implements CiclistaDAO {
     @Override
     public List<ClasifGeneral> getClasifGeneral(){
         List<ClasifGeneral> clasifGenerals = new ArrayList<>();
-        String sql = "SELECT \n" +
-                "    c.nombre AS nombre_ciclista, \n" +
-                "    eq.nombre AS nombre_equipo, \n" +
-                "    SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos\n" +
-                "FROM \n" +
-                "    resultados_etapa r\n" +
-                "JOIN \n" +
-                "    ciclistas c ON r.id_ciclista = c.id_ciclista\n" +
-                "JOIN \n" +
-                "    equipos eq ON c.id_equipo = eq.id_equipo\n" +
-                "WHERE \n" +
-                "    r.estado = 'FINALIZADO'\n" +
-                "GROUP BY \n" +
-                "    c.id_ciclista, eq.nombre\n" +
-                "ORDER BY \n" +
-                "    total_segundos ASC;";
+        String sql = """
+                SELECT\s
+                    c.nombre AS nombre_ciclista,\s
+                    eq.nombre AS nombre_equipo,\s
+                    SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos
+                FROM\s
+                    resultados_etapa r
+                JOIN\s
+                    ciclistas c ON r.id_ciclista = c.id_ciclista
+                JOIN\s
+                    equipos eq ON c.id_equipo = eq.id_equipo
+                WHERE\s
+                    r.estado = 'FINALIZADO'
+                GROUP BY\s
+                    c.id_ciclista, eq.nombre
+                ORDER BY\s
+                    total_segundos ASC;""";
 
         try (Connection conn = db.getConnection();
              PreparedStatement statement = conn.prepareStatement(sql);
