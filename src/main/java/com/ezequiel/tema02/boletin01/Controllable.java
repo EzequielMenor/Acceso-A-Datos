@@ -17,7 +17,6 @@ import com.ezequiel.tema02.boletin01.act8.ClasifGeneral;
 import com.ezequiel.tema02.boletin01.act9.ClasifEquipo;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controllable {
@@ -41,7 +40,10 @@ public class Controllable {
     }
 
 
-
+    /**
+     * EJERCICIO 1: Listar equipos
+     * También es un 'helper' (ayudante) para los ejercicios 2 y 4.
+     */
     public void listarEquipos(){
         try {
             List<Equipo> equipos = equipoDAO.findAll();
@@ -61,6 +63,12 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 2: Ciclistas por equipo (Parte 1)
+     * Este metodo se usa si el usuario elige un ID de equipo.
+     * También es un 'helper' (ayudante) para el ejercicio 4.
+     * @param id_equipo
+     */
     public void ciclistasPorEquipo(int id_equipo){
         try{
             List<Ciclista> ciclistas = ciclistaDAO.findByIdEquipo(id_equipo);
@@ -80,6 +88,11 @@ public class Controllable {
         }
     }
 
+
+    /**
+     * EJERCICIO 2: Ciclistas por equipo (Parte 2)
+     * Este metodo se usa si el usuario elige '0' (todos los ciclistas).
+     */
     public void listarCiclistas(){
         try{
             List<Ciclista> ciclistas = ciclistaDAO.findAll();
@@ -99,6 +112,11 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 3: Listar etapas (Tarea b)
+     * Muestra la lista de etapas.
+     * También es un 'helper' (ayudante) para el ejercicio 5.
+     */
     public void listarEtapas(){
         try{
             List<Etapa> etapas = etapaDAO.findAll();
@@ -120,6 +138,11 @@ public class Controllable {
 
     }
 
+
+    /**
+     * EJERCICIO 3: Resumen de etapas (Tarea c)
+     * Muestra el resumen de KM y cantidad por tipo de etapa.
+     */
     public void listarEtapasResuimdas(){
         try {
             List<ResumenEtapa> etapasResumidas = etapaDAO.getResumenPorTipo();
@@ -137,6 +160,11 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 4: Velocidad media de un ciclista (Tarea c)
+     * Recibe el ID del ciclista (elegido en la Vista) y muestra el cálculo.
+     * @param idCiclista
+     */
     public void mostrarVelocidadMedia(int idCiclista){
         try {
             double velocidad = ciclistaDAO.getVelocidadMedia(idCiclista);
@@ -152,6 +180,11 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 5: Clasificación de una etapa (Tarea c)
+     * Recibe el ID de la etapa (elegida en la Vista) y muestra la clasificación.
+     * @param idEtapa
+     */
     public void mostrarClasificacionEtapa(int idEtapa){
         try{
             List<ClasifEtapa> clasifEtapas = etapaDAO.getClasifEtapa(idEtapa);
@@ -170,6 +203,13 @@ public class Controllable {
         }
 
     }
+
+    /**
+     * -- HELPER (Ayudante) para formatear Duration a HH:MM:SS ---
+     * Usado por los ejercicios 5, 8 y 9.
+     * @param duration
+     * @return
+     */
     private String formatDuration(Duration duration) {
         long segundosTotales = duration.getSeconds();
         long horas = segundosTotales / 3600;
@@ -180,6 +220,9 @@ public class Controllable {
         return String.format("%02d:%02d:%02d", horas, minutos, segundos);
     }
 
+    /**
+     * EJERCICIO 6: Clasificación de la montaña (Tarea b)
+     */
     public void mostrarClasifMontanas() {
         try {
             List<ClasificacionMontana> clasificacionMontanas = ciclistaDAO.getClasificacionMontana();
@@ -199,6 +242,9 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 7: Clasificación de la regularidad (Tarea b)
+     */
     public void mostrarClasifRegularidad() {
         try {
             List<ClasificacionRegularidad> clasificacionRegularidads = ciclistaDAO.getClasifRegularidad();
@@ -218,6 +264,9 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 8: Clasificación general (Tarea b)
+     */
     public void mostrarClasifGeneral(){
         try {
             List<ClasifGeneral> clasifGenerals = ciclistaDAO.getClasifGeneral();
@@ -237,6 +286,9 @@ public class Controllable {
         }
     }
 
+    /**
+     * EJERCICIO 9: Clasificación general por equipos (Tarea b)
+     */
     public void mostrarClasifPorEquipos(){
         try {
             List<ClasifEquipo> clasifEquipos = equipoDAO.getClasifEquipo();

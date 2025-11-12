@@ -7,5 +7,6 @@ import java.util.List;
 public interface EtapaDAO {
     List<ResumenEtapa> getResumenPorTipo();
     List<Etapa> findAll();
+    //Ejercicio 5
     List<ClasifEtapa> getClasifEtapa (int idEtapa);
 }
