@@ -14,8 +14,10 @@ import com.ezequiel.tema02.boletin01.act5.ClasifEtapa;
 import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
 import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
 import com.ezequiel.tema02.boletin01.act8.ClasifGeneral;
+import com.ezequiel.tema02.boletin01.act9.ClasifEquipo;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controllable {
@@ -227,6 +229,24 @@ public class Controllable {
                         clasifGeneral.getNombreCiclista(),
                         clasifGeneral.getNombreEquipo(),
                         formatDuration(clasifGeneral.getTiempoTotal())
+                );
+            }
+            System.out.println(t.toString());
+        } catch (DataAccessException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void mostrarClasifPorEquipos(){
+        try {
+            List<ClasifEquipo> clasifEquipos = equipoDAO.getClasifEquipo();
+            TextTable t = new TextTable("Pos", "Equipo", "Tiempo Total");
+            int pos = 1;
+            for (ClasifEquipo clasifEquipo : clasifEquipos) {
+                t.addRow(
+                        String.valueOf(pos++),
+                        clasifEquipo.getNombreEquipo(),
+                        formatDuration(clasifEquipo.getTiempo_total())
                 );
             }
             System.out.println(t.toString());
