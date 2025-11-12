@@ -72,7 +72,23 @@ public class EtapaDAOImpl implements EtapaDAO{
     //Ejercicio 5
     @Override
     public List<ClasifEtapa> getClasifEtapa(int idEtapa){
-        String sql = "SELECT r.posicion, c.nombre AS nombre_ciclista, eq.nombre AS nombre_equipo, EXTRACT(EPOCH FROM r.tiempo) AS tiempo_en_segundos FROM resultados_etapa r JOIN ciclistas c ON r.id_ciclista = c.id_ciclista JOIN equipos eq ON c.id_equipo = eq.id_equipo WHERE r.id_etapa = ? AND r.estado = 'FINALIZADO' ORDER BY r.posicion;";
+        String sql = """
+            SELECT
+                r.posicion,
+                c.nombre AS nombre_ciclista,
+                eq.nombre AS nombre_equipo,
+                EXTRACT(EPOCH FROM r.tiempo) AS tiempo_en_segundos
+            FROM
+                resultados_etapa r
+            JOIN
+                ciclistas c ON r.id_ciclista = c.id_ciclista
+            JOIN
+                equipos eq ON c.id_equipo = eq.id_equipo
+            WHERE
+                r.id_etapa = ? AND r.estado = 'FINALIZADO'
+            ORDER BY
+                r.posicion;
+            """;
         List<ClasifEtapa> clasifEtapas = new ArrayList<>();
         try(Connection conn = db.getConnection();
             PreparedStatement st = conn.prepareStatement(sql);) {
