@@ -13,12 +13,12 @@ import com.ezequiel.tema02.boletin01.act3.ResumenEtapa;
 import com.ezequiel.tema02.boletin01.act5.ClasifEtapa;
 import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
 import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
+import com.ezequiel.tema02.boletin01.act8.ClasifGeneral;
 
-import javax.xml.crypto.Data;
 import java.time.Duration;
 import java.util.List;
 
-public class Controlador {
+public class Controllable {
     private static final DB.Driver DB_DRIVER = DB.Driver.POSTGRESQL; // mysql
     private static final String DB_HOST = "localhost";
     private static final int DB_PORT = 5432; // 3306 para mysql
@@ -26,14 +26,13 @@ public class Controlador {
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "test";
 
-    private final DB db;
     private final EquipoDAO equipoDAO;
     private final CiclistaDAO ciclistaDAO;
     private final EtapaDAO etapaDAO;
 
 
-    public Controlador(){
-        this.db = new DB(DB_DRIVER, DB_HOST, DB_PORT, DB_NAME, DB_USERNAME,DB_PASSWORD);
+    public Controllable(){
+        DB db = new DB(DB_DRIVER, DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
         this.equipoDAO = new EquipoDAOImpl(db);
         this.ciclistaDAO = new CiclistaDAOImpl(db);
         this.etapaDAO = new EtapaDAOImpl(db);
@@ -213,6 +212,25 @@ public class Controlador {
             }
             System.out.println(t.toString());
         }catch (DataAccessException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void mostrarClasifGeneral(){
+        try {
+            List<ClasifGeneral> clasifGenerals = ciclistaDAO.getClasifGeneral();
+            TextTable t = new TextTable("Pos", "Ciclista", "Equipo", "Tiempo Total");
+            int pos = 1;
+            for (ClasifGeneral clasifGeneral : clasifGenerals) {
+                t.addRow(
+                        String.valueOf(pos++),
+                        clasifGeneral.getNombreCiclista(),
+                        clasifGeneral.getNombreEquipo(),
+                        formatDuration(clasifGeneral.getTiempoTotal())
+                );
+            }
+            System.out.println(t.toString());
+        } catch (DataAccessException e) {
             System.err.println(e.getMessage());
         }
     }

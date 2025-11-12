@@ -4,11 +4,13 @@ import com.ezequiel.tema02.boletin01.DB;
 import com.ezequiel.tema02.boletin01.DataAccessException;
 import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
 import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
+import com.ezequiel.tema02.boletin01.act8.ClasifGeneral;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,5 +150,44 @@ public class CiclistaDAOImpl implements CiclistaDAO {
             throw new DataAccessException("Error al obtener clasificación de regularidad", e);
         }
         return clasificacionRegularidad;
+    }
+
+    //Ejercicio 8
+    @Override
+    public List<ClasifGeneral> getClasifGeneral(){
+        List<ClasifGeneral> clasifGenerals = new ArrayList<>();
+        String sql = "SELECT \n" +
+                "    c.nombre AS nombre_ciclista, \n" +
+                "    eq.nombre AS nombre_equipo, \n" +
+                "    SUM(EXTRACT(EPOCH FROM r.tiempo)) AS total_segundos\n" +
+                "FROM \n" +
+                "    resultados_etapa r\n" +
+                "JOIN \n" +
+                "    ciclistas c ON r.id_ciclista = c.id_ciclista\n" +
+                "JOIN \n" +
+                "    equipos eq ON c.id_equipo = eq.id_equipo\n" +
+                "WHERE \n" +
+                "    r.estado = 'FINALIZADO'\n" +
+                "GROUP BY \n" +
+                "    c.id_ciclista, eq.nombre\n" +
+                "ORDER BY \n" +
+                "    total_segundos ASC;";
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                long totalSegundos = rs.getLong("total_segundos");
+                Duration tiempoTotal = Duration.ofSeconds(totalSegundos);
+                        clasifGenerals.add(new ClasifGeneral(
+                                rs.getString("nombre_ciclista"),
+                                rs.getString("nombre_equipo"),
+                                tiempoTotal
+                        ));
+            }
+        }catch (SQLException e ){
+            throw new DataAccessException("Error al obtener clasificación general", e);
+        }
+        return clasifGenerals;
     }
 }

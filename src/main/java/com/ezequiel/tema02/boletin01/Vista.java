@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Vista {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Controlador controlador = new Controlador();
+        Controllable controlador = new Controllable();
         int opcion;
         do {
             System.out.println("--- MENU SQL ---");
@@ -16,6 +16,7 @@ public class Vista {
             System.out.println("5. Clasificación etapa");
             System.out.println("6. Clasificación de la montaña");
             System.out.println("7. Clasificación de regularidad");
+            System.out.println("8. Clasificación general");
             System.out.println("0. Salir");
             System.out.print("Opción: ");
             opcion = sc.nextInt();
@@ -75,6 +76,10 @@ public class Vista {
                 case 7:
                     System.out.println("--- Clasificación de Regularidad ---");
                     controlador.mostrarClasifRegularidad();
+                    break;
+                case 8:
+                    System.out.println("--- Clasificación General ---");
+                    controlador.mostrarClasifGeneral();
                     break;
                 default:
                     System.out.println("Opción no válida");

@@ -2,6 +2,7 @@ package com.ezequiel.tema02.boletin01.act2;
 
 import com.ezequiel.tema02.boletin01.act6.ClasificacionMontana;
 import com.ezequiel.tema02.boletin01.act7.ClasificacionRegularidad;
+import com.ezequiel.tema02.boletin01.act8.ClasifGeneral;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface CiclistaDAO {
 
     //Ejercicio 7
     List<ClasificacionRegularidad> getClasifRegularidad();
+
+    //Ejercicio 8
+    List<ClasifGeneral> getClasifGeneral();
 }
