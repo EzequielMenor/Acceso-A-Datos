@@ -1,4 +1,4 @@
-package com.germangascon.ejemplosada.tema02.exception;
+package com.ezequiel.tema02.ejemplosClase.exception;
 
 /**
  * <p><strong>DataAccessException</strong></p>

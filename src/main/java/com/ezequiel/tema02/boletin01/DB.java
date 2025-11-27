@@ -9,14 +9,16 @@ public class DB {
     private final String user;
     private final String password;
 
-    public enum Driver{
+    public enum Driver {
         MYSQL, POSTGRESQL;
+
         @Override
-        public String toString(){
+        public String toString() {
             return name().toLowerCase();
         }
     }
-    public DB (Driver driver, String host, int port, String database, String user, String password){
+
+    public DB(Driver driver, String host, int port, String database, String user, String password) {
         this.url = "jdbc:" + driver + "://" + host + ":" + port + "/" + database;
         this.user = user;
         this.password = password;
