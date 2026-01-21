@@ -1,9 +1,10 @@
 package com.ezequiel.tema03.kanbanHibernate.ui;
 
 import java.util.Scanner;
+
+import com.ezequiel.tema03.kanbanHibernate.TextTable;
 import com.ezequiel.tema03.kanbanHibernate.models.*;
 import com.ezequiel.tema03.kanbanHibernate.service.*;
-import com.ezequiel.tema03.kanbanHibernate.resources.TextTable;
 
 public class TableroMenu {
   private Scanner sc;

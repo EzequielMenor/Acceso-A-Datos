@@ -1,4 +1,4 @@
-package com.ezequiel.tema03.kanbanHibernate.resources;
+package com.ezequiel.tema03.kanbanHibernate;
 
 import java.util.*;
 
