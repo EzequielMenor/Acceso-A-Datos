@@ -1,13 +1,13 @@
 services:
   postgres:
     image: postgres:15
-    container_name: kanban_postgres
+    container_name: frases_postgres
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: test
-      POSTGRES_DB: library
+      POSTGRES_DB: frases_celebres
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

@@ -19,6 +19,7 @@
 
 - [Hibernate Test](/src/main/java/com/ezequiel/tema03/hibernatetest/)
 
-### Proyecto Kanban Hibernate 🚀
+### Proyectos 🚀
 
 - [Proyecto Kanban](/src/main/java/com/ezequiel/tema03/kanbanHibernate/)
+- [**Proyecto Final: API Frases Célebres**](/src/main/java/com/ezequiel/tema03/proyectoFinal/)
